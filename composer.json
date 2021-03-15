@@ -1,0 +1,16 @@
+{
+    "name": "domantas/phpmvc-framework",
+    "authors": [
+        {
+            "name": "Domantas",
+            "email": "domantasslai@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "./"
+        }
+    },
+    "require": {},
+    "description": ""
+}
