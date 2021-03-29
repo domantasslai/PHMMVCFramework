@@ -25,6 +25,8 @@ abstract class Model
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
+            } else {
+                Throw new \Exception("Cannot declare {$key} as variable in " . get_class($this));
             }
         }
     }
@@ -48,10 +50,12 @@ abstract class Model
     public function validate()
     {
         foreach ($this->rules() as $attribute => $rules) {
+            // model variables
             $value = $this->{$attribute};
+            // Rule can by multidimensional array
             foreach ($rules as $rule) {
                 $ruleName = $rule;
-                if (!is_string($rule)) {
+                if (!is_string($ruleName)) {
                     $ruleName = $rule[0];
                 }
                 if ($ruleName === self::RULE_REQUIRED && !$value) {
@@ -64,7 +68,7 @@ abstract class Model
                     $this->addErrorByRule($attribute, self::RULE_MIN, ['min' => $rule['min']]);
                 }
                 if ($ruleName === self::RULE_MAX && strlen($value) > $rule['max']) {
-                    $this->addErrorByRule($attribute, self::RULE_MAX);
+                    $this->addErrorByRule($attribute, self::RULE_MAX, ['max' => $rule['max']]);
                 }
                 if ($ruleName === self::RULE_MATCH && $value !== $this->{$rule['match']}) {
                     $this->addErrorByRule($attribute, self::RULE_MATCH, ['match' => $rule['match']]);
